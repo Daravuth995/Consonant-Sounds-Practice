@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Interactive English Speaking Course</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cyan: #00f7ff;
+      --magenta: #ff00f7;
+      --yellow: #ffee00;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px 50px;
+      min-height: 100vh;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--yellow));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 15px rgba(0, 247, 255, 0.3);
+    }
+    
+    .header p {
+      font-size: 1.1rem;
+      color: #aaa;
+      max-width: 600px;
+      margin: 10px auto;
+    }
+
+    .video-banner {
+      width: 100%;
+      height: 500px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+      border-radius: 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: all 0.5s ease;
+    }
+    
+    .video-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, 
+        rgba(0, 247, 255, 0.1) 0%, 
+        rgba(255, 0, 247, 0.1) 50%, 
+        rgba(255, 238, 0, 0.1) 100%);
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .video-banner:hover::before {
+      opacity: 1;
+    }
+    
+    .video-banner:hover {
+      box-shadow: 0 0 30px 5px rgba(0, 247, 255, 0.4),
+                  0 0 60px 5px rgba(255, 0, 247, 0.3),
+                  0 0 90px 5px rgba(255, 238, 0, 0.2);
+    }
+    
+    .video-banner video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .sound-toggle {
+      background: linear-gradient(45deg, #00f7ff, #00a2ff);
+      color: #111;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 247, 255, 0.3);
+    }
+    
+    .sound-toggle:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 247, 255, 0.5);
+      background: linear-gradient(45deg, #00a2ff, #00f7ff);
+    }
+    
+    .sound-toggle:active {
+      transform: translateY(1px);
+    }
+
+    .teacher-credit {
+      margin: 20px 0;
+      font-size: 1.2em;
+      color: #aaa;
+      transition: all 0.3s ease;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .teacher-credit:hover {
+      color: #00f7ff;
+      text-shadow: 0 0 10px rgba(0, 247, 255, 0.7);
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .ipa-section {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      max-width: 1000px;
+    }
+    
+    .ipa-item {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      position: relative;
+      cursor: default;
+      color: #fff;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      min-width: 180px;
+      text-align: center;
+    }
+    
+    .ipa-item::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      z-index: -1;
+      background: linear-gradient(45deg, var(--cyan), var(--magenta), var(--yellow), var(--cyan));
+      background-size: 400%;
+      border-radius: 10px;
+      opacity: 0;
+      transition: 0.5s;
+    }
+    
+    .ipa-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .ipa-item:hover::before {
+      opacity: 1;
+      animation: animate-border 3s linear infinite;
+    }
+    
+    @keyframes animate-border {
+      0% {
+        background-position: 0 0;
+      }
+      50% {
+        background-position: 300% 0;
+      }
+      100% {
+        background-position: 0 0;
+      }
+    }
+    
+    .footer {
+      margin-top: 50px;
+      text-align: center;
+      color: #777;
+      font-size: 0.9rem;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .video-banner {
+        height: 350px;
+      }
+      
+      .ipa-item {
+        min-width: 140px;
+        font-size: 16px;
+        padding: 12px 15px;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+  <div class="header">
+    <h1>Interactive English Speaking Course</h1>
+    <p>Master pronunciation with our immersive learning experience and phonetic exercises</p>
+  </div>
+
+  <div class="video-banner">
+    <video id="course-video" muted autoplay loop playsinline>
+      <source src="https://www.dropbox.com/scl/fi/l5epndvscl2mpeydyfgv9/Video-3-2-25-3-21-20-in-the-afternoon.mp4?rlkey=qthicqhhtfe8inpm1b2stq1he&st=5ep98sr0&raw=1" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <div class="controls">
+    <button class="sound-toggle" onclick="toggleSound()">
+      <i class="fas fa-volume-mute"></i> Toggle Sound
+    </button>
+  </div>
+
+  <div class="teacher-credit">Presented by Teacher Daravuth Yon</div>
+
+  <h2 style="margin-bottom: 20px; text-align: center; color: #fff; font-weight: 300;">
+    <span style="background: linear-gradient(90deg, var(--cyan), var(--magenta)); 
+    -webkit-background-clip: text; background-clip: text; color: transparent;">
+      Phonetic Alphabet Practice
+    </span>
+  </h2>
+
+  <div class="ipa-section">
+    <div class="ipa-item">/p/ (pen /pen/)</div>
+    <div class="ipa-item">/b/ (book /bʊk/)</div>
+    <div class="ipa-item">/t/ (town /taʊn/)</div>
+    <div class="ipa-item">/t̬/ (cutting /ˈkʌt̬ɪŋ/ - US)</div>
+    <div class="ipa-item">/d/ (day /deɪ/)</div>
+    <div class="ipa-item">/k/ (cat /kæt/)</div>
+    <div class="ipa-item">/g/ (give /ɡɪv/)</div>
+    <div class="ipa-item">/f/ (fish /fɪʃ/)</div>
+    <div class="ipa-item">/v/ (very /ˈveri/)</div>
+    <div class="ipa-item">/θ/ (think /θɪŋk/)</div>
+    <div class="ipa-item">/ð/ (this /ðɪs/)</div>
+    <div class="ipa-item">/s/ (say /seɪ/)</div>
+    <div class="ipa-item">/z/ (zoo /zuː/)</div>
+    <div class="ipa-item">/ʃ/ (she /ʃiː/)</div>
+    <div class="ipa-item">/ʒ/ (vision /ˈvɪʒən/)</div>
+    <div class="ipa-item">/tʃ/ (cheese /tʃiːz/)</div>
+    <div class="ipa-item">/dʒ/ (jump /dʒʌmp/)</div>
+    <div class="ipa-item">/m/ (moon /muːn/)</div>
+    <div class="ipa-item">/n/ (name /neɪm/)</div>
+    <div class="ipa-item">/ŋ/ (sing /sɪŋ/)</div>
+    <div class="ipa-item">/l/ (look /lʊk/)</div>
+    <div class="ipa-item">/r/ (run /rʌn/)</div>
+    <div class="ipa-item">/w/ (we /wiː/)</div>
+    <div class="ipa-item">/j/ (yes /jes/)</div>
+    <div class="ipa-item">/h/ (hand /hænd/)</div>
+  </div>
+
+  <div class="footer">
+    <p>© 2023 Interactive English Speaking Course | Start your language journey today</p>
+  </div>
+
+  <script>
+    const video = document.getElementById('course-video');
+    
+    // Disable fullscreen and zooming
+    video.addEventListener('fullscreenchange', (e) => {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+    });
+    
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '0')) {
+        e.preventDefault();
+      }
+    });
+    
+    document.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+    
+    function toggleSound() {
+      video.muted = !video.muted;
+      const icon = document.querySelector('.sound-toggle i');
+      if (video.muted) {
+        icon.classList.remove('fa-volume-up');
+        icon.classList.add('fa-volume-mute');
+      } else {
+        icon.classList.remove('fa-volume-mute');
+        icon.classList.add('fa-volume-up');
+      }
+    }
+    
+    // Add slight stagger animation to IPA items
+    document.querySelectorAll('.ipa-item').forEach((item, index) => {
+      item.style.transitionDelay = `${index * 0.03}s`;
+    });
+  </script>
+</body>
+</html>
